@@ -63,7 +63,7 @@ function GenerarReto(){
     var element = $("#reto")[0];
     html2canvas(element).then(function (canvas) {
         canvas.toBlob(function (blob) {
-                saveAs(blob, nombre_imagen+".jpg");
+                //saveAs(blob, nombre_imagen+".jpg");
             });
     });    
 }

@@ -10,7 +10,6 @@
             width: 464px;
             height: 464px;
             border: 1px solid black;
-            background-color: grey;
             position:relative;
         }
         #reto > div{
@@ -48,8 +47,10 @@ function GenerarReto(){
     const imagenes = Array(18).fill(0).map((e,i)=>i+1)
     imagenes.sort(() => Math.random() - 0.5);
     const cantidad = 4 + Math.floor(Math.random() * 2);
+    console.log("nuevo reto");
     for(let i = 0; i < cantidad; i++){
         $("#reto").append(`<div><img id="imagen_${i}" src="img/${imagenes[i]}.png"></div>`);
+        
         console.log(imagenes[i]);
         let rotate = rotates[Math.floor(Math.random() * rotates.length)];
         $("#imagen_"+i).css("transform", `rotate(${rotate}deg)`);

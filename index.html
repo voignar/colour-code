@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador retos Color Code</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         #reto{
             width: 464px;
@@ -29,6 +30,18 @@
             
         </div>
     </div>
+    
+    <div class="mt-2  gap-3 justify-content-center text-center">
+        <button class="btn btn-danger" type="button" onclick="votar(-1)"><i class="fa fa-thumbs-down"></i></button>
+        <button class="btn btn-success" type="button"  onclick="votar(1)"><i class="fa fa-thumbs-up"></i></button>
+ 
+        <div class="alert alert-success" id="success-alert" role="alert">
+            Voto registrado correctamente
+        </div>  
+        <div class="alert alert-danger" id="error-alert" role="alert">
+            Ya has votado este código
+        </div>                  
+    </div>
     <div class="mt-2  gap-3 justify-content-center text-center">
         <button class="btn btn-primary" type="button" id="#download" onclick="DownloadAsImage()">Descargar</button>
         <button class="btn btn-primary" type="button" id="#download" onclick="GenerarReto()">Generar nuevo reto</button>      
@@ -47,10 +60,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
   
 <script>
+$("#success-alert").hide();
+$("#error-alert").hide();
 const rotates = [0, 90, 180, 270];
+var nombre_imagen = "";
+var votos_realizados = [];
 function GenerarReto(){
     $("#reto").empty();
-    var nombre_imagen = "";
+    nombre_imagen = "";
     const imagenes = Array(18).fill(0).map((e,i)=>i+1)
     imagenes.sort(() => Math.random() - 0.5);
     const cantidad = 4 + Math.floor(Math.random() * 2);
@@ -62,14 +79,7 @@ function GenerarReto(){
         $("#imagen_"+i).css("transform", `rotate(${rotate}deg)`);
         nombre_imagen += imagenes[i] + "_" + rotate + "_";
     }    
-    nombre_imagen = nombre_imagen.slice(0,-1);
-    console.log(nombre_imagen);
-    var element = $("#reto")[0];
-    html2canvas(element).then(function (canvas) {
-        canvas.toBlob(function (blob) {
-                //saveAs(blob, nombre_imagen+".jpg");
-            });
-    });    
+    nombre_imagen = nombre_imagen.slice(0,-1);  
 }
 
 GenerarReto();
@@ -90,6 +100,22 @@ function DownloadAsImage() {
         var myImage = canvas.toDataURL();
         downloadURI(myImage, "reto.png");
     });
+}
+
+function votar(voto){
+    if(!votos_realizados.includes(nombre_imagen)){
+        $.post( "https://colour-code-backend-cp4o-dev.fl0.io/nuevo-codigo", { codigo: nombre_imagen, puntuacion: voto })
+            .done(function( data ) {
+                votos_realizados.push(nombre_imagen);
+                $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
+                $("#success-alert").slideUp(500);
+                });       
+        });       
+    }else{
+        $("#error-alert").fadeTo(2000, 500).slideUp(500, function() {
+                $("#error-alert").slideUp(500);
+                });         
+    }
 }
 </script>
 

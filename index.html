@@ -9,13 +9,12 @@
     <style>
         #reto{
             width: 464px;
-            height: 464px;
-            border: 1px solid black;
             position:relative;
             max-width: 80%;
         }
         #reto > div{
             position:absolute;
+            border: 1px solid black;
             left: 0;
         }
         #reto img{
@@ -60,6 +59,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
   
 <script>
+var cw = 30 + parseInt($('#reto').width());
+$('#reto').css({
+    'height': cw + 'px'
+});    
+
 $("#success-alert").hide();
 $("#error-alert").hide();
 const rotates = [0, 90, 180, 270];

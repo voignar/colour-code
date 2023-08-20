@@ -65,6 +65,13 @@ $("#error-alert").hide();
 const rotates = [0, 90, 180, 270];
 var nombre_imagen = "";
 var votos_realizados = [];
+if(!localStorage.getItem("votos")){
+    votos_realizados = []; 
+    console.log("sin votos");
+}else{
+    votos_realizados = JSON.parse(localStorage.getItem("votos"));
+    console.log(votos_realizados);
+}
 function GenerarReto(){
     $("#reto").empty();
     nombre_imagen = "";
@@ -107,6 +114,7 @@ function votar(voto){
         $.post( "https://colour-code-backend-cp4o-dev.fl0.io/nuevo-codigo", { codigo: nombre_imagen, puntuacion: voto })
             .done(function( data ) {
                 votos_realizados.push(nombre_imagen);
+                localStorage.setItem("votos", JSON.stringify(votos_realizados));
                 $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
                 $("#success-alert").slideUp(500);
                 });       
